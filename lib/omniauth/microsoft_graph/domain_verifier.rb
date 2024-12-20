@@ -24,6 +24,7 @@ module OmniAuth
         @access_token = access_token
         @id_token = access_token.params['id_token']
         @skip_verification = options[:skip_domain_verification]
+        Rails.logger.info("Auth hash: #{auth_hash.to_json}")
       end
 
       def verify!
