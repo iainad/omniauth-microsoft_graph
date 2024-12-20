@@ -38,8 +38,9 @@ module OmniAuth
         # This means while it's not suitable for consistently identifying a user
         # (the domain might change), it is suitable for verifying membership in
         # a given domain.
-        domain_verified_jwt_claim
-
+        Rails.logger.info("Email domain: #{email_domain}")
+        Rails.logger.info("UPN domain: #{upn_domain}")
+        Rails.logger.info("Skip verification: #{skip_verification}")
         return true if email_domain == upn_domain ||
           skip_verification == true ||
           (skip_verification.is_a?(Array) && skip_verification.include?(email_domain)) ||
