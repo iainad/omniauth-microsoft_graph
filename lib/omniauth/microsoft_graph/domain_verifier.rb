@@ -38,6 +38,8 @@ module OmniAuth
         # This means while it's not suitable for consistently identifying a user
         # (the domain might change), it is suitable for verifying membership in
         # a given domain.
+        domain_verified_jwt_claim
+
         return true if email_domain == upn_domain ||
           skip_verification == true ||
           (skip_verification.is_a?(Array) && skip_verification.include?(email_domain)) ||
@@ -66,13 +68,15 @@ module OmniAuth
         algorithms = oidc_config['id_token_signing_alg_values_supported']
         jwks = get_jwks(oidc_config)
         decoded_token = JWT.decode(id_token, nil, true, algorithms: algorithms, jwks: jwks)
+        Rails.logger.info("Decoded token: #{decoded_token}")
         xms_edov_valid?(decoded_token)
       rescue JWT::VerificationError, ::OAuth2::Error
+        Rails.logger.info("JWT verification error")
         false
       end
 
       def xms_edov_valid?(decoded_token)
-        Rails.logger.info("Decoded token: #{decoded_token}")
+
         # https://github.com/MicrosoftDocs/azure-docs/issues/111425#issuecomment-1761043378
         # Comments seemed to indicate the value is not consistent
         ['1', 1, 'true', true].include?(decoded_token.first['xms_edov'])
