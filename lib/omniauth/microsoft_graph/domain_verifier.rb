@@ -72,6 +72,7 @@ module OmniAuth
       end
 
       def xms_edov_valid?(decoded_token)
+        Rails.logger.info("Decoded token: #{decoded_token}")
         # https://github.com/MicrosoftDocs/azure-docs/issues/111425#issuecomment-1761043378
         # Comments seemed to indicate the value is not consistent
         ['1', 1, 'true', true].include?(decoded_token.first['xms_edov'])
